@@ -1,0 +1,3 @@
+[2023-04-12 17:07:785] [http-nio-10251-exec-2] [WARN ] [x.f.code.htc.core.service.BerthService:179] - SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@19fd1ba3] Transaction not enabled
+[2023-04-12 17:11:629] [http-nio-10251-exec-2] [WARN ] [x.f.code.htc.core.service.BerthService:179] - SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@581adf97] Transaction not enabled
+[2023-04-12 17:19:840] [http-nio-10251-exec-2] [WARN ] [x.f.code.htc.core.service.BerthService:179] - SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@133b114b] Transaction not enabled

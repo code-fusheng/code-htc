@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.fusheng.code.htc.core.mapper.BerthMapper">
+
+    <select id="selectBerthsForRecord" resultType="xyz.fusheng.code.htc.model.entity.Berth">
+        SELECT t1.berth_mark as berthNum,
+               CONCAT_WS(',', t1.longitude, t1.latitude) AS startLocation,
+               CONCAT_WS(',', t2.longitude, t2.latitude) AS endLocation,
+               ROUND(ST_DISTANCE_SPHERE(POINT(t1.longitude, t1.latitude), POINT(t2.longitude, t2.latitude))*1000, 2) AS length
+        FROM patrol_berth_collect_record t1
+                 INNER JOIN patrol_berth_collect_record t2 ON t1.berth_mark = t2.berth_mark
+        WHERE t1.task_mark = #{taskId} and t2.task_mark = #{taskId} and t1.part_mark = 0 AND t2.part_mark = 1;
+    </select>
+
+    <select id="matchBerth" resultType="xyz.fusheng.code.htc.model.entity.Berth">
+        select *,
+               ST_Distance_Sphere(ST_PointFromText(CONCAT('POINT(', SUBSTRING_INDEX(start_location, ',', 1), ' ', SUBSTRING_INDEX(start_location, ',', -1), ')')),
+                   POINT(#{longitude}, #{latitude})) as start_dist,
+               ST_Distance_Sphere(ST_PointFromText(CONCAT('POINT(', SUBSTRING_INDEX(end_location, ',', 1), ' ', SUBSTRING_INDEX(end_location, ',', -1), ')')),
+                   POINT(#{longitude}, #{latitude})) as end_dist
+        from patrol_berth
+        order by LEAST(start_dist, end_dist) limit 1
+    </select>
+
+    <insert id="saveBerth">
+        insert into patrol_berth (id, berth_num, berth_num_virtual, start_location, end_location, length, start_point, end_point)
+        values (#{berth.id}, #{berth.berthNum}, #{berth.berthNumVirtual}, #{berth.startLocation}, #{berth.endLocation}, #{berth.length},
+                ST_PointFromText(CONCAT('POINT(', SUBSTRING_INDEX(#{berth.startLocation}, ',', 1), ' ', SUBSTRING_INDEX(#{berth.startLocation}, ',', -1), ')')),
+                ST_PointFromText(CONCAT('POINT(', SUBSTRING_INDEX(#{berth.endLocation}, ',', 1), ' ', SUBSTRING_INDEX(#{berth.endLocation}, ',', -1), ')'))
+                )
+    </insert>
+
+</mapper>
