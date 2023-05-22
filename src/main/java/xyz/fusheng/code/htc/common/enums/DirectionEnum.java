@@ -1,6 +1,7 @@
 package xyz.fusheng.code.htc.common.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,9 +30,18 @@ public enum DirectionEnum implements BaseEnum<String> {
     ;
 
     @EnumValue
-    @JsonValue
     private String code;
+    @JsonValue
     private String value;
+
+    public static DirectionEnum of(String code) {
+        return BaseEnum.of(DirectionEnum.class, code);
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static DirectionEnum ofValue(String value) {
+        return BaseEnum.ofValue(DirectionEnum.class, value);
+    }
 
 }
 

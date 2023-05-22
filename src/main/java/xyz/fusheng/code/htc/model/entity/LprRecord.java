@@ -1,6 +1,7 @@
 package xyz.fusheng.code.htc.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import xyz.fusheng.code.htc.common.enums.MatchStatusEnum;
@@ -23,15 +24,26 @@ public class LprRecord {
 
     private Long deviceId;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS", timezone = "GMT+8")
     private Timestamp eventTime;
+
+    private String eventLocation;
+
+    private String targetLocation;
 
     private String licencePlate;
 
     private String detail;
 
+    private String remark;
+
     @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("创建时间")
     private Date createdAt;
+
+    private String smallImage;
+
+    private String fullImage;
 
     private MatchStatusEnum matchStatus;
 

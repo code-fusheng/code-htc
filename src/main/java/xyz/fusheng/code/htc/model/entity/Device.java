@@ -3,6 +3,7 @@ package xyz.fusheng.code.htc.model.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import xyz.fusheng.code.htc.common.enums.DeviceTypeEnum;
 import xyz.fusheng.code.springboot.core.entity.BaseEntity;
@@ -20,10 +21,12 @@ import java.util.Date;
 @TableName(value = "patrol_device")
 public class Device extends BaseEntity {
 
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     private String uuid;
+
+    private String ipAddr;
 
     private String name;
 
@@ -31,6 +34,7 @@ public class Device extends BaseEntity {
 
     private String brand;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS", timezone = "GMT+8")
     private Timestamp lastestHeartbeat;
 
     private String lastestLocation;

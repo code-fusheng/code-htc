@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 /**
  * @author code-fusheng <2561035977@qq.com>
@@ -48,7 +49,8 @@ public class MqttUtil {
         options.setCleanSession(true);
         // 60s 心跳包 - 处理断连问题
         options.setKeepAliveInterval(60);
-        logger.info("自动初始化MQTT连接 => state:{}", client.isConnected());
+        connect();
+        logger.info("自动建立MQTT连接 => state:{}", client.isConnected());
     }
 
     public void connect() throws MqttException {
@@ -57,9 +59,11 @@ public class MqttUtil {
         }
     }
 
+    // @PreDestroy
     public void disconnect() throws MqttException {
         if (this.client.isConnected()) {
             this.client.disconnect();
+            logger.info("自动断开MQTT连接 => state:{}", client.isConnected());
         }
     }
 

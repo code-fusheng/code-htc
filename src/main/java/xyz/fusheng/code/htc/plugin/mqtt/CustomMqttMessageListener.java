@@ -40,7 +40,7 @@ public class CustomMqttMessageListener implements IMqttMessageListener {
 
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
-        logger.info("MQTT消费者 => Topic:{}, Message:{}", topic, message);
+        logger.info("MQTT消费者 => Topic:{}, Message:{}", topic, message.getId());
         // 测试验证逻辑
         try {
             Device device = new Device();
@@ -49,17 +49,19 @@ public class CustomMqttMessageListener implements IMqttMessageListener {
             }
             if (ApiTypeEnum.CAR_HEARTBEAT.getValue().equals(topic)) {
                 device = deviceService.saveOrUpdateDevice(DeviceTypeEnum.CAR, ApiTypeEnum.CAR_HEARTBEAT, message);
-                // TODO 保存记录
+                // 保存记录
                 heartbeatRecordService.saveHeartbeatRecord(message, device);
             }
             if (ApiTypeEnum.CAMERA_IVS_RESULT.getValue().equals(topic)) {
                 // 相机抓拍结果
                 device = deviceService.saveOrUpdateDevice(DeviceTypeEnum.CAMERA, ApiTypeEnum.CAMERA_IVS_RESULT, message);
-                // TODO 保存记录
+                // 保存记录
                 lprRecordService.saveLprRecord(message, device);
+                // TODO 如果当前处于违停抓拍模式 加入违停抓拍逻辑 - 保存视频流
+                lprRecordService.saveParkViolation(message, device);
             }
             if (ApiTypeEnum.CAR_LOCATION_REPLY.getValue().equals(topic)) {
-                // TODO 保存采集记录
+                // 保存采集记录
                 berthService.saveBerthCollectRecord(message);
             }
         } catch (Exception e) {

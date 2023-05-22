@@ -1,5 +1,6 @@
 package xyz.fusheng.code.htc.model.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import xyz.fusheng.code.htc.common.enums.DirectionEnum;
 
@@ -10,6 +11,7 @@ import xyz.fusheng.code.htc.common.enums.DirectionEnum;
  */
 
 @Data
+@TableName(value = "patrol_device_car_camera_ref")
 public class DeviceCarCameraRef {
 
     private Long carId;

@@ -6,7 +6,7 @@
         SELECT t1.berth_mark as berthNum,
                CONCAT_WS(',', t1.longitude, t1.latitude) AS startLocation,
                CONCAT_WS(',', t2.longitude, t2.latitude) AS endLocation,
-               ROUND(ST_DISTANCE_SPHERE(POINT(t1.longitude, t1.latitude), POINT(t2.longitude, t2.latitude))*1000, 2) AS length
+               ROUND(ST_DISTANCE_SPHERE(POINT(t1.longitude, t1.latitude), POINT(t2.longitude, t2.latitude)), 2) AS length
         FROM patrol_berth_collect_record t1
                  INNER JOIN patrol_berth_collect_record t2 ON t1.berth_mark = t2.berth_mark
         WHERE t1.task_mark = #{taskId} and t2.task_mark = #{taskId} and t1.part_mark = 0 AND t2.part_mark = 1;
@@ -22,6 +22,29 @@
         order by LEAST(start_dist, end_dist) limit 1
     </select>
 
+    <select id="matchBerths" resultType="xyz.fusheng.code.htc.model.entity.Berth">
+        select *,
+               ST_Distance_Sphere(ST_PointFromText(CONCAT('POINT(', SUBSTRING_INDEX(start_location, ',', 1), ' ', SUBSTRING_INDEX(start_location, ',', -1), ')')),
+                                  POINT(#{longitude}, #{latitude})) as start_dist,
+               ST_Distance_Sphere(ST_PointFromText(CONCAT('POINT(', SUBSTRING_INDEX(end_location, ',', 1), ' ', SUBSTRING_INDEX(end_location, ',', -1), ')')),
+                                  POINT(#{longitude}, #{latitude})) as end_dist
+        from patrol_berth
+        order by LEAST(start_dist, end_dist) limit #{limit}
+    </select>
+
+    <select id="matchBerthM2" resultType="xyz.fusheng.code.htc.model.entity.Berth">
+        SELECT
+            *, ST_Intersects (ST_Buffer (ST_GeomFromText (CONCAT('LINESTRING(', SUBSTRING_INDEX( start_location, ',', 1 ), ' ', SUBSTRING_INDEX( start_location, ',', - 1 ), ', ', SUBSTRING_INDEX( end_location, ',', 1 ), ' ', SUBSTRING_INDEX( end_location, ',', - 1 ),')' ) ),3 ),
+                POINT (#{longitude} , #{latitude} )
+            ) AS is_in_line_segment
+        FROM patrol_berth
+        WHERE
+            ST_Intersects (ST_Buffer (ST_GeomFromText (CONCAT('LINESTRING(', SUBSTRING_INDEX( start_location, ',', 1 ), ' ', SUBSTRING_INDEX( start_location, ',', - 1 ), ', ', SUBSTRING_INDEX( end_location, ',', 1 ), ' ', SUBSTRING_INDEX( end_location, ',', - 1 ),')' ) ),3 ),
+                POINT (#{longitude} , #{latitude} )
+            ) = 1
+        limit #{limit}
+    </select>
+
     <insert id="saveBerth">
         insert into patrol_berth (id, berth_num, berth_num_virtual, start_location, end_location, length, start_point, end_point)
         values (#{berth.id}, #{berth.berthNum}, #{berth.berthNumVirtual}, #{berth.startLocation}, #{berth.endLocation}, #{berth.length},
@@ -29,5 +52,7 @@
                 ST_PointFromText(CONCAT('POINT(', SUBSTRING_INDEX(#{berth.endLocation}, ',', 1), ' ', SUBSTRING_INDEX(#{berth.endLocation}, ',', -1), ')'))
                 )
     </insert>
+
+
 
 </mapper>

@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collections;
@@ -98,21 +99,24 @@ public class MatchServiceV1 {
         // 2. 检索定位心跳中的小车位置信息
         Timestamp eventTime = record.getEventTime();
         LocalDateTime startTime = LocalDateTime.ofInstant(eventTime.toInstant(), ZoneId.systemDefault());
-        LocalDateTime endTime = LocalDateTime.ofInstant(eventTime.toInstant(), ZoneId.systemDefault()).plusSeconds(1);
+        LocalDateTime endTime = LocalDateTime.ofInstant(eventTime.toInstant(), ZoneId.systemDefault());
         switch (ref.getDirection()) {
             case E:
             case W:
-                // 相机抓拍在心跳位置信息中间 - 无需修正时间
+                // 相机抓拍在心跳位置信息中间 - 以前后半秒进行修正匹配
+                Duration offset = Duration.ofMillis(500);
+                startTime = startTime.minus(offset);
+                endTime = endTime.plus(offset);
                 break;
             case ES:
             case SW:
                 // 后方相机抓拍 心跳位置 => 小的时间
-                startTime = LocalDateTime.ofInstant(eventTime.toInstant(), ZoneId.systemDefault()).minusSeconds(1);
+                startTime = startTime.minusSeconds(1);
                 break;
             case NE:
             case WN:
                 // 前方的相机抓拍 心跳位置 => 大的时间
-                endTime = LocalDateTime.ofInstant(eventTime.toInstant(), ZoneId.systemDefault()).plusSeconds(1);
+                endTime = endTime.plusSeconds(1);
                 break;
             default:
         }
@@ -128,8 +132,8 @@ public class MatchServiceV1 {
      */
     public Berth doMatchBerth(HeartbeatRecord hbRecord) {
         String[] split = hbRecord.getLocation().split(",");
-        BigDecimal longitude = new BigDecimal(split[0]).setScale(7, RoundingMode.UNNECESSARY);
-        BigDecimal latitude = new BigDecimal(split[1]).setScale(7, RoundingMode.UNNECESSARY);
+        BigDecimal longitude = new BigDecimal(split[0]).setScale(7, RoundingMode.HALF_UP);
+        BigDecimal latitude = new BigDecimal(split[1]).setScale(7, RoundingMode.HALF_UP);
         Berth berth = berthService.matchBerth(longitude, latitude);
         logger.info("泊位匹配结果 => {}", berth);
         return berth;

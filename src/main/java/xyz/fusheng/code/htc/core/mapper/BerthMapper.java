@@ -22,4 +22,8 @@ public interface BerthMapper extends BaseMapper<Berth> {
     Berth matchBerth(@Param("longitude") BigDecimal longitude, @Param("latitude") BigDecimal latitude);
 
     void saveBerth(@Param("berth") Berth berth);
+
+    List<Berth> matchBerths(@Param("longitude") BigDecimal longitude, @Param("latitude") BigDecimal latitude, @Param("limit") int limit);
+
+    List<Berth> matchBerthM2(@Param("longitude") BigDecimal longitude, @Param("latitude") BigDecimal latitude, @Param("limit") int limit);
 }

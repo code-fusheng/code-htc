@@ -1,0 +1,33 @@
+server:
+  port: 10251
+  servlet:
+    context-path: /robot
+spring:
+  application:
+    name: @artifactId@
+  profiles:
+    active: @profiles.active@
+  datasource:
+    url: jdbc:mysql://47.111.158.6:13306/code-htc?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true
+    username: root
+    password: Xcode-mysql?
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: localhost
+    port: 6390
+    password: Xcode-redis?
+    database: 1
+mybatis-plus:
+  configuration:
+    call-setters-on-nulls: true
+  generator:
+    enable: false
+    parent: xyz.fusheng
+    moduleName: code.htc
+mqtt:
+  url: "tcp://47.111.158.6:1883"
+  username: admin
+  password: public
+  client-id: htc-robot-dev
+image:
+  local-path: /Users/fusheng/WorkSpace/DataWork/htc-image

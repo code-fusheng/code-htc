@@ -3,6 +3,7 @@ package xyz.fusheng.code.htc.core.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -16,6 +17,8 @@ import xyz.fusheng.code.htc.core.mapper.BerthMapper;
 import xyz.fusheng.code.htc.model.entity.Berth;
 import xyz.fusheng.code.htc.model.entity.BerthCollectRecord;
 import xyz.fusheng.code.htc.plugin.mqtt.MqttUtil;
+import xyz.fusheng.code.springboot.core.entity.LimitDto;
+import xyz.fusheng.code.springboot.core.entity.PageVo;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -55,7 +58,7 @@ public class BerthService extends ServiceImpl<BerthMapper, Berth> {
         // 1. 泊位采集-发布订阅
         JSONObject messageJson = new JSONObject();
         messageJson.put("key", key);
-        String vin = uuid.split(",")[-1];
+        //String vin = uuid.split("-")[-1];
         mqttUtil.publish(ApiTypeEnum.CAR_LOCATION.getValue(), JSON.toJSONString(messageJson), 1);
     }
 
@@ -115,6 +118,12 @@ public class BerthService extends ServiceImpl<BerthMapper, Berth> {
     public Berth matchBerth(BigDecimal longitude, BigDecimal latitude) {
         Berth berth = berthMapper.matchBerth(longitude, latitude);
         return berth;
+    }
+
+    public PageVo<Berth> pageBerth(LimitDto<Berth> limitDto) {
+        IPage<Berth> iPage = berthMapper.selectPage(limitDto.getPage(), new LambdaQueryWrapper<Berth>()
+                .orderByAsc(Berth::getBerthNum));
+        return new PageVo<>(iPage);
     }
 }
 

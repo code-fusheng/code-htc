@@ -1,6 +1,7 @@
 package xyz.fusheng.code.htc.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import xyz.fusheng.code.springboot.core.entity.BaseEntity;
@@ -38,6 +39,7 @@ public class MatchResult {
 
     private BigDecimal altitude;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS", timezone = "GMT+8")
     private Timestamp eventTime;
 
     private Integer matchLevel;

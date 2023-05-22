@@ -6,9 +6,9 @@ spring:
   profiles:
     active: @profiles.active@
   datasource:
-    url: jdbc:mysql://localhost:3306/code-htc?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true
+    url: jdbc:mysql://47.111.158.6:13306/code-htc?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true
     username: root
-    password: 123456
+    password: Xcode-mysql?
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
     host: localhost
@@ -23,7 +23,9 @@ mybatis-plus:
     parent: xyz.fusheng
     moduleName: code.htc
 mqtt:
-  url: "tcp://42.192.222.62:1883"
+  url: "tcp://47.111.158.6:1883"
   username: admin
   password: public
   client-id: code-test-1
+image:
+  local-path: /Users/fusheng/WorkSpace/DataWork/htc-image

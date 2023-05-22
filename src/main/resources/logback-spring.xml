@@ -13,9 +13,19 @@
             <pattern>%red(%d{yyyy-MM-dd HH:mm:SSS}) %green([%thread]) %highlight(%-5level) %boldMagenta(%logger.%method:%L) - %cyan(%msg%n)</pattern>
         </layout>
     </appender>
+
     <!-- 日志输出方式: MARK文件 -->
-    <appender name="MARK_FILE" class="ch.qos.logback.core.FileAppender">
+    <appender name="MARK_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${log.dir}/${log.appName}-mark.log</File>
+        <!-- 滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件。-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${log.dir}/archive/${log.appName}-mark-%d{yyyy-MM-dd}.%i.log
+            </FileNamePattern>
+            <!-- 当天的日志大小 超过${log.max.size}时,压缩日志并保存 -->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${log.max.size}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
         <!-- EvaluatorFilter 求值过滤器 -->
         <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
             <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
@@ -29,14 +39,24 @@
             <charset>UTF-8</charset>
         </encoder>
     </appender>
+
     <!-- 日志输出方式: INFO文件 -->
     <!-- FileAppender 继承自 OutputStreamAppender 其中 writeBytes 在追加日志的时候，是直接把日志写入 OutputStream 中，属于同步记录日志 -->
-    <appender name="INFO_FILE" class="ch.qos.logback.core.FileAppender">
+    <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${log.dir}/${log.appName}-info.log</File>
         <!-- LevelFilter 用来比较日志级别，然后进行相应的处理:
              如果匹配就调用 onMatch 定义的处理方式，默认是交给下一个过滤器处理（AbstractMatcherFilter 基类中定义的默认值）
              否则，调用 onMismatch 定义的处理方式，默认也是交给下一个过滤器处理
         -->
+        <!-- 滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件。-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${log.dir}/archive/${log.appName}-info-%d{yyyy-MM-dd}.%i.log
+            </FileNamePattern>
+            <!-- 当天的日志大小 超过${log.max.size}时,压缩日志并保存 -->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${log.max.size}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <!-- 与 ThresholdFilter 不同的是，LevelFilter 仅仅配置 level 是无法真正起作用的。 -->
             <level>INFO</level>
@@ -50,9 +70,19 @@
             <charset>UTF-8</charset>
         </encoder>
     </appender>
+
     <!-- 日志输出方式: DEBUG文件 -->
-    <appender name="DEBUG_FILE" class="ch.qos.logback.core.FileAppender">
+    <appender name="DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${log.dir}/${log.appName}-debug.log</File>
+        <!-- 滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件。-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${log.dir}/archive/${log.appName}-debug-%d{yyyy-MM-dd}.%i.log
+            </FileNamePattern>
+            <!-- 当天的日志大小 超过${log.max.size}时,压缩日志并保存 -->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${log.max.size}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>DEBUG</level>
             <onMatch>ACCEPT</onMatch>
@@ -63,9 +93,19 @@
             <charset>UTF-8</charset>
         </encoder>
     </appender>
+
     <!-- 日志输出方式: WARN文件 -->
-    <appender name="WARN_FILE" class="ch.qos.logback.core.FileAppender">
+    <appender name="WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${log.dir}/${log.appName}-warn.log</File>
+        <!-- 滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件。-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${log.dir}/archive/${log.appName}-warn-%d{yyyy-MM-dd}.%i.log
+            </FileNamePattern>
+            <!-- 当天的日志大小 超过${log.max.size}时,压缩日志并保存 -->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${log.max.size}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>WARN</level>
             <onMatch>ACCEPT</onMatch>
@@ -76,9 +116,19 @@
             <charset>UTF-8</charset>
         </encoder>
     </appender>
+
     <!-- 日志输出方式: ERROR文件 -->
-    <appender name="ERROR_FILE" class="ch.qos.logback.core.FileAppender">
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${log.dir}/${log.appName}-error.log</File>
+        <!-- 滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件。-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${log.dir}/archive/${log.appName}-error-%d{yyyy-MM-dd}.%i.log
+            </FileNamePattern>
+            <!-- 当天的日志大小 超过${log.max.size}时,压缩日志并保存 -->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${log.max.size}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
             <onMatch>ACCEPT</onMatch>
@@ -94,12 +144,12 @@
          可以设置 logger 的 additivity 属性为 false ，这样就不会继承 root 的 appender 了
     -->
     <logger name="xyz.fusheng.code.htc" level="INFO" additivity="false">
-        <appender-ref ref="CONSOLE" />
-        <appender-ref ref="INFO_FILE" />
-        <appender-ref ref="DEBUG_FILE" />
-        <appender-ref ref="WARN_FILE" />
-        <appender-ref ref="ERROR_FILE" />
-        <appender-ref ref="MARK_FILE" />
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="INFO_FILE"/>
+        <appender-ref ref="DEBUG_FILE"/>
+        <appender-ref ref="WARN_FILE"/>
+        <appender-ref ref="ERROR_FILE"/>
+        <appender-ref ref="MARK_FILE"/>
     </logger>
     <root level="INFO">
         <appender-ref ref="CONSOLE" />

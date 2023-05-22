@@ -1,6 +1,7 @@
 package xyz.fusheng.code.htc.common.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,20 +19,30 @@ import xyz.fusheng.code.springboot.core.enums.BaseEnum;
 @ToString
 public enum DeviceTypeEnum implements BaseEnum<String> {
 
-    CAR("CAR", "小车设备"),
-    CAMERA("CAMERA", "相机设备"),
-    RTK("RTK", "定位设备"),
+    CAR("CAR", "小车"),
+    CAMERA("CAMERA", "相机"),
+    RTK("RTK", "定位"),
     ;
 
     @EnumValue
-    @JsonValue
     private String code;
+    @JsonValue
     private String value;
 
     DeviceTypeEnum(String code, String value) {
         this.code = code;
         this.value = value;
     }
+
+    public static DeviceTypeEnum of(String code) {
+        return BaseEnum.of(DeviceTypeEnum.class, code);
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static DeviceTypeEnum ofValue(String value) {
+        return BaseEnum.ofValue(DeviceTypeEnum.class, value);
+    }
+
 
 }
 

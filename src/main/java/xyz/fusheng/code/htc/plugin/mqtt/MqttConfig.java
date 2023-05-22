@@ -42,7 +42,6 @@ public class MqttConfig {
     @Bean
     public void MqttConsumer() throws MqttException {
         logger.info("[初始化MQTT车辆消费者-开始]");
-        mqttUtil.connect();
         mqttUtil.subscribe("/patrol_robot/#", customMqttMessageListener, 0);
     }
 

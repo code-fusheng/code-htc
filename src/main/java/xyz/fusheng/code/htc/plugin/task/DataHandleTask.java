@@ -40,7 +40,7 @@ public class DataHandleTask {
     /**
      * Task: 清理一小时前的心跳数据 时间可以配置
      */
-    @Scheduled(cron = "0 0 */1 * * ?")
+    // @Scheduled(cron = "0 0 */1 * * ?")
     public void clearHistoryHBRecord() {
         LocalDateTime limitTime = LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()).minusHours(1);
         boolean remove = heartbeatRecordService.remove(new LambdaQueryWrapper<HeartbeatRecord>().lt(HeartbeatRecord::getCreatedAt, String.valueOf(limitTime)));
@@ -74,10 +74,10 @@ public class DataHandleTask {
     public void lprRecordHandleTaskV3() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start("matchTaskV3");
-        logger.info("车牌识别记录匹配定时任务 => 开始");
+        logger.info("车牌识别记录处理定时任务V3 => 开始");
         matchServiceV3.lprRecordHandleTask3();
         stopWatch.stop();
-        logger.info("车牌识别记录匹配定时任务 => 耗时:{}ms", stopWatch.getTotalTimeMillis());
+        logger.info("车牌识别记录处理定时任务V3 => 耗时:{}ms", stopWatch.getTotalTimeMillis());
     }
 
 }

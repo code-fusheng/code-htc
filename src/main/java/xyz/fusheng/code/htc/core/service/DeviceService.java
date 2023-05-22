@@ -3,6 +3,7 @@ package xyz.fusheng.code.htc.core.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.Logger;
@@ -12,6 +13,9 @@ import xyz.fusheng.code.htc.common.enums.ApiTypeEnum;
 import xyz.fusheng.code.htc.common.enums.DeviceTypeEnum;
 import xyz.fusheng.code.htc.core.mapper.DeviceMapper;
 import xyz.fusheng.code.htc.model.entity.Device;
+import xyz.fusheng.code.springboot.core.entity.LimitDto;
+import xyz.fusheng.code.springboot.core.entity.PageVo;
+import xyz.fusheng.code.springboot.core.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
@@ -21,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -87,6 +92,11 @@ public class DeviceService extends ServiceImpl<DeviceMapper, Device> {
 
     public List<Device> listAll() {
         return deviceMapper.selectList(null);
+    }
+
+    public PageVo<Device> pageDevice(LimitDto<Device> limitDto) {
+        IPage<Device> iPage = deviceMapper.selectPage(limitDto.getPage(), null);
+        return new PageVo<>(iPage);
     }
 }
 

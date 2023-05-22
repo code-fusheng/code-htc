@@ -20,7 +20,7 @@ public enum MatchStatusEnum implements BaseEnum<Integer> {
 
     TRUE(1, "true"),
     NONE(0, "none"),
-    FALSE(2, "FALSE")
+    FALSE(-1, "false")
 
     ;
 

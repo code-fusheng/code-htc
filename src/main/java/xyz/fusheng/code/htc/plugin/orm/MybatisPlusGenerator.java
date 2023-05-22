@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import xyz.fusheng.code.springboot.core.entity.BaseEntity;
 
 import javax.annotation.PostConstruct;
@@ -26,8 +27,8 @@ import java.util.List;
 
 import static com.baomidou.mybatisplus.generator.config.rules.DbColumnType.INTEGER;
 
-@Configuration
-@ConditionalOnProperty(prefix = "mybatis-plus.generator", name = "enable", havingValue = "true", matchIfMissing = true)
+// @Configuration
+//@ConditionalOnProperty(prefix = "mybatis-plus.generator", name = "enable", havingValue = "true", matchIfMissing = true)
 public class MybatisPlusGenerator {
 
     private static final Logger logger = LoggerFactory.getLogger(MybatisPlusGenerator.class);
@@ -86,7 +87,7 @@ public class MybatisPlusGenerator {
                             .service("core.service")
                             .serviceImpl("core.service.impl")
                             .mapper("core.mapper")
-                            .xml("core.mapper.xml")
+                            .xml(new ClassPathResource("mapper").getPath())
                             .build())
                     .strategyConfig(builder -> builder
                             .addInclude("patrol_berth", "patrol_device")
