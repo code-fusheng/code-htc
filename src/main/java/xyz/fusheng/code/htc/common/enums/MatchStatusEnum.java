@@ -25,8 +25,8 @@ public enum MatchStatusEnum implements BaseEnum<Integer> {
     ;
 
     @EnumValue
-    @JsonValue
     private Integer code;
+    @JsonValue
     private String value;
 
 }
